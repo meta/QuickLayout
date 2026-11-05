@@ -6,7 +6,6 @@
  */
 
 import Foundation
-import QuickLayoutCore
 import UIKit
 
 // A custom parameter attribute that constructs layout from closures.

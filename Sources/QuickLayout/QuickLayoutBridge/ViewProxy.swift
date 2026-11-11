@@ -109,7 +109,10 @@ public extension UILabel {
   static func proxy(for attributedText: NSAttributedString, numberOfLines: Int = 1) -> ViewProxy {
     return ViewProxy(flexibility: .partial) { constrainingSize in
       assert(Thread.isMainThread, "UILabel ViewProxy can be used only on the main thread. Prefer using FOALabel.swift if you need to have background safe advance sizing.")
-      attributedSizingLabel.text = nil
+      // Clearing `attributedText` makes UIKit drop the attributes it kept from the previous string
+      // (font, paragraph style, kern), so a string that omits them measures as on a new label.
+      // Assigning `text = nil` first would keep them, even through a later `attributedText = nil`.
+      attributedSizingLabel.attributedText = nil
       attributedSizingLabel.attributedText = attributedText
       attributedSizingLabel.numberOfLines = numberOfLines
       return attributedSizingLabel.quick_layoutThatFits(constrainingSize).size

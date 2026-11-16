@@ -79,6 +79,12 @@ struct ShowcaseApp: View {
       ]),
   ]
 
+  private var availableShowcases: [SCSection] {
+    guard #available(iOS 17.0, tvOS 17.0, *) else { return showcases }
+    return showcases + [SCSection("Manual Updates", [ManualUpdatesShowcaseView.self])]
+  }
+
+  // @nolint ASTGREP(common/swift/quicklayout-missing-macro) SwiftUI app body
   var body: some View {
     NavigationView {
       List {
@@ -92,7 +98,7 @@ struct ShowcaseApp: View {
         .multilineTextAlignment(.leading)
         .listRowSeparator(.hidden)
 
-        ForEach(showcases) { section in
+        ForEach(availableShowcases) { section in
           Section(section.title) {
             ForEach(section.showscases) { showcase in
               NavigationLink(destination: showcase.view()) {
